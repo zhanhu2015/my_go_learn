@@ -1,0 +1,327 @@
+package main
+
+//func foo1(i int) int {
+//	i = 100
+//	i = 300
+//	fmt.Println("foo1 is called")
+//	return i
+//}
+//
+//func foo2(i int) int {
+//	i = 200
+//	//defer foo1(666)
+//	i = 500
+//	fmt.Println("foo2 is called", i)
+//	return i
+//}
+//
+//func foo3(i int) int {
+//	fmt.Println("1111111")
+//	defer foo1(600)
+//	fmt.Println("2222222")
+//	defer foo2(700)
+//	fmt.Println("3333333")
+//	return i
+//}
+//
+//func main() {
+//	foo3(996)
+//	fmt.Println("main is called")
+//}
+
+//type Human struct {
+//	name string
+//	age int
+//	weight float32
+//}
+//
+//type Student struct {
+//	Human
+//	speciality int
+//}
+//
+//func main()  {
+//	mark := Student{Human{"mark",25, 96.8}, 77}
+//	fmt.Println(mark)
+//	fmt.Println(mark.Human.name)
+//}
+
+//type Rectangle struct {
+//	width, height float64
+//}
+//type Circle struct {
+//	radius float64
+//}
+//
+//func (r Rectangle) area() float64 {
+//	return r.width * r.height
+//}
+//func (c Circle) area() float64 {
+//	return c.radius * c.radius * math.Pi
+//}
+//func main() {
+//	r1 := Rectangle{12, 2}
+//	r2 := Rectangle{9, 4}
+//	c1 := Circle{10}
+//	c2 := Circle{25}
+//	fmt.Println("Area of r1 is: ", r1.area())
+//	fmt.Println("Area of r2 is: ", r2.area())
+//	fmt.Println("Area of c1 is: ", c1.area())
+//	fmt.Println("Area of c2 is: ", c2.area())
+//}
+
+//const(
+//	WHITE = iota
+//	BLACK
+//	BLUE
+//	RED
+//	YELLOW
+//)
+//type Color byte
+//type Box struct {
+//	width, height, depth float64
+//	color Color
+//}
+//type BoxList []Box //a slice of boxes
+//func (b Box) Volume() float64 {
+//	return b.width * b.height * b.depth
+//}
+//func (b *Box) SetColor(c Color) {
+//	b.color = c
+//}
+//func (bl BoxList) BiggestsColor() Color {
+//	v := 0.00
+//	k := Color(WHITE)
+//	for _, b := range bl {
+//		if b.Volume() > v {
+//			v = b.Volume()
+//			k = b.color
+//		}
+//	}
+//	return k
+//}
+//func (bl BoxList) PaintItBlack() {
+//	for i, _ := range bl {
+//		bl[i].SetColor(BLACK)
+//	}
+//}
+//func (c Color) String() string {
+//	strings := []string {"WHITE", "BLACK", "BLUE", "RED", "YELLOW"}
+//	return strings[c]
+//}
+//func main() {
+//	boxes := BoxList{
+//		Box{4, 4, 4, RED},
+//		Box{10, 10, 1, YELLOW},
+//		Box{1, 1, 20, BLACK},
+//		Box{10, 10, 1, BLUE},
+//		Box{10, 30, 1, WHITE},
+//		Box{20, 20, 20, YELLOW},
+//	}
+//	fmt.Printf("We have %d boxes in our set\n", len(boxes))
+//	fmt.Println("The volume of the first one is", boxes[0].Volume(), "cm³")
+//	fmt.Println("The color of the last one is", boxes[len(boxes)-1].color.String())
+//	fmt.Println("The biggest one is", boxes.BiggestsColor().String())
+//	fmt.Println("Let's paint them all black")
+//	boxes.PaintItBlack()
+//	fmt.Println("The color of the second one is", boxes[1].color.String())
+//	fmt.Println("Obviously, now, the biggest one is", boxes.BiggestsColor().String())
+//}
+
+//============================================================method重写
+
+//type Human struct {
+//	name  string
+//	age   int
+//	phone string
+//}
+//
+//type Student struct {
+//	Human
+//	school string
+//	loan float32
+//}
+//
+//type Employee struct {
+//	Human
+//	comapny string
+//	money float32
+//}
+//
+//func (h *Human) SayHi() {
+//	fmt.Printf("Hi, I am %s you can call me on %s\n", h.name, h.phone)
+//}
+//
+//func (h *Human) Sing(lyrics string) {
+//	fmt.Println("La la, la la la, la la la la la...", lyrics)
+//}
+//
+//func (s *Human) Guzzle(beerStein string)  {
+//	fmt.Println("Guzzle Guzzle Guzzle...", beerStein)
+//}
+//
+//func (e *Employee) SayHi() {
+//	fmt.Printf("I'm %s, I work on %s, Call me on %s\n", e.name, e.comapny, e.phone)
+//}
+//
+//func (s *Student) BorrowMoney(amount float32)  {
+//	s.loan += amount
+//}
+//
+//func (e *Employee) SendSalary(amount float32)  {
+//	e.money -= amount
+//}
+//
+//type Men interface {
+//	SayHi()
+//	Sing(lyrics string)
+//	Guzzle(beerStein string)
+//}
+//
+//type YoungChap interface {
+//	SayHi()
+//	Sing(song string)
+//	BorrowMoney(amount float32)
+//}
+//
+//type ElderlyGent interface {
+//	SayHi()
+//	Sing(song string)
+//	SendSalary(amount float32)
+//}
+
+//=========================================interface
+//type Human struct {
+//	name string
+//	age int
+//	phone string
+//}
+//type Student struct {
+//	Human //匿名字段
+//	school string
+//	loan float32
+//}
+//type Employee struct {
+//	Human //匿名字段
+//	company string
+//	money float32
+//}
+////Human实现Sayhi方法
+//func (h Human) SayHi() {
+//	fmt.Printf("Hi, I am %s you can call me on %s\n", h.name, h.phone)
+//}
+////Human实现Sing方法
+//func (h Human) Sing(lyrics string) {
+//	fmt.Println("La la la la...", lyrics)
+//}
+////Employee重载Human的SayHi方法
+//func (e Employee) SayHi() {
+//	fmt.Printf("Hi, I am %s, I work at %s. Call me on %s\n", e.name,
+//		e.company, e.phone) //Yes you can split into 2 lines here.
+//}
+//// Interface Men被Human,Student和Employee实现
+//// 因为这三个类型都实现了这两个方法
+//type Men interface {
+//	SayHi()
+//	Sing(lyrics string)
+//}
+//func main() {
+//	mike := Student{Human{"Mike", 25, "222-222-XXX"}, "MIT", 0.00}
+//	paul := Student{Human{"Paul", 26, "111-222-XXX"}, "Harvard", 100}
+//	sam := Employee{Human{"Sam", 36, "444-222-XXX"}, "Golang Inc.", 1000}
+//	Tom := Employee{Human{"Sam", 36, "444-222-XXX"}, "Things Ltd.", 5000}
+//	//定义Men类型的变量i
+//	var i Men
+//	//i能存储Student
+//	i = mike
+//	fmt.Println("This is Mike, a Student:")
+//	i.SayHi()
+//	i.Sing("November rain")
+//	//i也能存储Employee
+//	i = Tom
+//	fmt.Println("This is Tom, an Employee:")
+//	i.SayHi()
+//	i.Sing("Born to be wild")
+//	//定义了slice Men
+//	fmt.Println("Let's use a slice of Men and see what happens")
+//	x := make([]Men, 3)
+//	//T这三个都是不同类型的元素，但是他们实现了interface同一个接口
+//	x[0], x[1], x[2] = paul, sam, mike
+//	for _, value := range x{
+//		value.SayHi()
+//	}
+//}
+
+//func sum(a []int, c chan int) {
+//	sum := 0
+//	for _, v := range a {
+//		sum += v
+//	}
+//	c <- sum // send sum to c
+//}
+//
+//func main() {
+//	a := []int{7, 2, 8, -9, 4, 0}
+//	c := make(chan int)
+//	go sum(a[:len(a)/2], c)
+//	go sum(a[len(a)/2:], c)
+//	x, y := <-c, <-c // receive from c
+//	fmt.Println(x, y, x+y)
+//}
+
+//===========================================go语言并发编程
+
+//func say(s string) {
+//	for i := 0; i < 5; i++ {
+//		runtime.Gosched()
+//		fmt.Println(s)
+//	}
+//}
+//func main() {
+//	go say("world") //开一个新的Goroutines执行
+//	say("hello")    //当前Goroutines执行
+//}
+
+//func fib(n int, c chan int)  {
+//	x, y := 1, 1
+//	for i := 0; i < n ; i++{
+//		c <-x
+//		x, y = y, x+y
+//	}
+//	close(c)
+//}
+//
+//func main()  {
+//	c := make(chan int, 10)
+//	go fib(cap(c), c)
+//	for i := range c{
+//		fmt.Println(i)
+//	}
+//}
+
+//func fib(c, quit chan int) {
+//	x, y := 1, 1
+//	for {
+//		select {
+//		case c <- x:
+//			x, y = y, x+y
+//		case <-quit:
+//			fmt.Println("quit")
+//			return
+//		}
+//	}
+//}
+//
+//func main() {
+//	c := make(chan int)
+//	quit := make(chan int)
+//	go func() {
+//		for i := 0; i < 10; i++ {
+//			fmt.Println(<-c)
+//			quit <- 0
+//		}
+//	}()
+//	fib(c, quit)
+//}
+
+

@@ -1,0 +1,19 @@
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"log"
+	"path"
+)
+
+func main() {
+	fileInfoList, err := ioutil.ReadDir("/home/megvii/beeworker-nvr/pubks")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(len(fileInfoList))
+	for i := range fileInfoList {
+		fmt.Println(path.Ext(fileInfoList[i].Name()))
+	}
+}

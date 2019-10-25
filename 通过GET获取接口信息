@@ -1,0 +1,37 @@
+package main
+
+// 调用其他接口的实例
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+type res_s struct {
+	Code int     `json:"code"`
+	Error string `json:"error"`
+	Text string  `json:"text"`
+}
+
+func fetch_szTong() (szTong_ptr *res_s, err error) {
+	var URL = "https://api-beehive-test.zzcrowd.com.cn/collect/v1/work/project"
+
+	var szTong_b []byte
+	if response, err := http.NewRequest("GET", URL, nil); err != nil {
+		return szTong_ptr, err
+	} else {
+		if szTong_b, err = ioutil.ReadAll(response.Body); err != nil {
+			return szTong_ptr, err
+		}
+	}
+
+	szTong_ptr = &res_s{}
+	err = json.Unmarshal(szTong_b, szTong_ptr) // JSON to Struct
+	return szTong_ptr, err
+}
+
+func main() {
+	r, _ := fetch_szTong()
+	fmt.Println(*r)
+}
