@@ -1,0 +1,89 @@
+package main
+
+import "C"
+import (
+	"fmt"
+	"github.com/golang/glog"
+	"io"
+	"io/ioutil"
+	"math/rand"
+	"os"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
+
+	"my_go_learn/encrypt"
+)
+
+func ChoosePubkey() (keyID int64, pemByte []byte, err error) {
+	matched, err := filepath.Glob(filepath.Join("/home/megvii/beeworker-nvr/pubks", "*.pem"))
+	if err != nil || len(matched) == 0 {
+		return encrypt.DefaultPublickKeyID, []byte(encrypt.DefaultPublicKeyPem), nil
+	}
+
+	rand.Seed(time.Now().Unix())
+	pubkeyFile := matched[rand.Intn(len(matched))]
+
+	pubkey, err := ioutil.ReadFile(pubkeyFile)
+
+	keyIDStr := filepath.Base(pubkeyFile)
+	keyIDStr = strings.Replace(keyIDStr, filepath.Ext(keyIDStr), "", 1)
+
+	keyID, err = strconv.ParseInt(keyIDStr, 10, 64)
+	return keyID, pubkey, err
+}
+
+//export EncryptFile
+func EncryptFile(originFilePath, encryptedFilePath *C.char) {
+	GoriginFilePath := string(C.GoString(originFilePath))
+	GencryptedFilePath := string(C.GoString(encryptedFilePath))
+	fmt.Println(GoriginFilePath)
+	fmt.Println(GencryptedFilePath)
+	fmt.Printf("v1 type:%T\n", GoriginFilePath)
+
+	fileLen := int64(0)
+	if fi, ok := os.Lstat(GoriginFilePath); ok == nil {
+		fileLen = fi.Size()
+	} else {
+		return
+	}
+
+	f, err := os.Open(GoriginFilePath)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+
+	keyID, pemByte, err := ChoosePubkey()
+	fmt.Println(keyID)
+	if err != nil {
+		glog.Errorln("Choose public key failed, err:", err)
+		return
+	}
+	glog.V(3).Infoln("Choose public key:", keyID)
+
+	encryptor := encrypt.NewEncryptorV3(keyID, pemByte)
+
+	encFd, err := encryptor.GetEncryptStreamReader(f, uint32(fileLen))
+	if err != nil {
+		return
+	}
+
+	megFd, err := os.Create(GencryptedFilePath)
+	if err != nil {
+		return
+	}
+	defer megFd.Close()
+
+	n, err := io.Copy(megFd, encFd)
+	if err == nil {
+		os.Remove(GoriginFilePath)
+	} else {
+		fmt.Println("Encrypted file[%s] failed, save to [%s] process byte:%d, err:%v\n", GoriginFilePath, GencryptedFilePath, n, err)
+	}
+
+}
+
+func main() {
+}
