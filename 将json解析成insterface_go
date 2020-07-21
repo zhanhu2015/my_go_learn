@@ -1,0 +1,59 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+)
+
+type JobConfig struct {
+	SpecJSON string `json:"spec_json"`
+	JobUID   string `json:"job_uid"`
+	Tags     []interface{} `json:"tags"`
+}
+
+type ToolConfig struct {
+	ConnectTimeout     int        `json:"connect_timeout"`
+	SegInterval        int        `json:"seg_interval"`
+	VideoExt           string     `json:"video_ext"`
+	PicturePreviewArgs [][]string `json:"picture_preview_args"`
+	DiscoverTimeout    int        `json:"discover_timeout"`
+}
+
+type Configuration struct {
+	Type         string          `json:"type"`
+	Version      string          `json:"version"`
+	JobConfig    JobConfig       `json:"job_config"`
+	ToolConfig   ToolConfig      `json:"tool_config"`
+}
+
+var tmpConfig Configuration
+
+func LoadJson() error {
+	conf, err := ioutil.ReadFile("/home/megvii/go/src/my_go_learn/config.json")
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	err = json.Unmarshal(conf, &tmpConfig)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func main() {
+	err := LoadJson()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	for _, t := range tmpConfig.JobConfig.Tags{
+		for v, k := range t.(map[string]interface{}){
+			fmt.Println(v,"==============", k)
+		}
+		fmt.Println("*******************")
+	}
+}

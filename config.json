@@ -1,0 +1,151 @@
+{
+    "type": "nvr",
+    "version": "1",
+    "job_config": {
+        "job_uid": "20040301001",
+        "spec_json": "",
+        "_comment_tag_options": "项目定制标签",
+        "tags": [
+            {
+                "key": "location",
+                "name": "采集地点",
+                "type": "input",
+                "is_necessary": true
+            },
+            {
+                "key": "business_line",
+                "type": "hide",
+                "value": "megcity"
+            },
+            {
+                "key": "device_height",
+                "name": "设备高度",
+                "place_holder": "请选择",
+                "type": "select",
+                "is_necessary": false,
+                "options":[
+                    {
+                        "name": "1m",
+                        "value": "1m"
+                    },
+                    {
+                        "name": "1.2m",
+                        "value": "1.2m"
+                    },
+                    {
+                        "name": "1.5m",
+                        "value": "1.5m"
+                    },
+                    {
+                        "name": "2m",
+                        "value": "2m"
+                    },
+                    {
+                        "name": "2.5m",
+                        "value": "2.5m"
+                    },
+                    {
+                        "name": "3m",
+                        "value": "3m"
+                    },
+                    {
+                        "name": "3.5m",
+                        "value": "3.5m"
+                    },
+                    {
+                        "name": "4m",
+                        "value": "4m"
+                    }
+                ]
+            }
+        ]
+    },
+    "tool_config": {
+        "connect_timeout": 5000,
+        "seg_interval": 300,
+        "video_ext": ".ts",
+        "search_timeout": 2,
+        "picture_preview_args": [
+            [
+                "-hide_banner",
+                "-loglevel",
+                "quiet",
+                "-nostats",
+                "-hwaccel",
+                "vaapi",
+                "-hwaccel_device",
+                "/dev/dri/renderD128",
+                "-hwaccel_output_format",
+                "vaapi",
+                "-rtsp_transport",
+                "tcp",
+                "-i",
+                "$INPUT",
+                "-vf",
+                "scale_vaapi=w=320:h=-2:format=nv12",
+                "-vf",
+                "scale=w=320:h=-2",
+                "-r",
+                "10",
+                "-c:v",
+                "mjpeg_vaapi",
+                "-global_quality",
+                "60",
+                "-update",
+                "1",
+                "-y",
+                "$OUTPUT"
+            ],
+            [
+                "-hide_banner",
+                "-loglevel",
+                "quiet",
+                "-nostats",
+                "-hwaccel",
+                "vaapi",
+                "-hwaccel_device",
+                "/dev/dri/renderD129",
+                "-hwaccel_output_format",
+                "vaapi",
+                "-rtsp_transport",
+                "tcp",
+                "-i",
+                "$INPUT",
+                "-vf",
+                "scale_vaapi=w=320:h=-2:format=nv12",
+                "-vf",
+                "scale=w=320:h=-2",
+                "-r",
+                "10",
+                "-c:v",
+                "mjpeg_vaapi",
+                "-global_quality",
+                "60",
+                "-update",
+                "1",
+                "-y",
+                "$OUTPUT"
+            ],
+            [
+                "-hide_banner",
+                "-loglevel",
+                "quiet",
+                "-nostats",
+                "-rtsp_transport",
+                "tcp",
+                "-i",
+                "$INPUT",
+                "-vf",
+                "scale=w=320:h=-2",
+                "-r",
+                "10",
+                "-global_quality",
+                "60",
+                "-update",
+                "1",
+                "-y",
+                "$OUTPUT"
+            ]
+        ]
+    }
+}

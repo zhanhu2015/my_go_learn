@@ -1,0 +1,66 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+)
+
+type Data struct {
+	Fps  int32                  `json:"fps"`
+	Long string                 `json:"long"`
+	Tags map[string]interface{} `json:"tags"`
+}
+
+func SaveData() error {
+	conf, err := ioutil.ReadFile("/home/megvii/go/src/my_go_learn/data.json")
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	var tmpConfig Data
+	err = json.Unmarshal(conf, &tmpConfig)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	tmpMap := make(map[string]interface{})
+	tmpMap["fps"] = tmpConfig.Fps
+	tmpMap["long"] = tmpConfig.Long
+	for k, v := range tmpConfig.Tags {
+		tmpMap[k] = v
+	}
+	tmpJson, err := json.Marshal(tmpMap)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	f, err := os.OpenFile(filepath.Join("/home/megvii/go/src/my_go_learn", "_filelist.json"), os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	_, err = f.Write(tmpJson)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	defer f.Close()
+
+	//m := make(map[string]interface{})
+	//err = json.Unmarshal(conf, &m)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return err
+	//}
+
+	return nil
+}
+
+func main() {
+	err := SaveData()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+}
