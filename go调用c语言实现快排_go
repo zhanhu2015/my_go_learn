@@ -1,0 +1,15 @@
+package main
+//extern int go_qsort_compare(void* a, void* b);
+import "C"
+import (
+	"fmt"
+	"my_go_learn/qsort"
+)
+
+func main() {
+	values := []int64{42, 9, 101, 95, 27, 25}
+	qsort.Slice(values, func(i, j int) bool {
+		return values[i] < values[j]
+	})
+	fmt.Println(values)
+}
